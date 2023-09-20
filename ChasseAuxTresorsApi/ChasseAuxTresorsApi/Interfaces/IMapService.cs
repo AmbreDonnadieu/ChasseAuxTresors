@@ -2,8 +2,8 @@
 
 namespace ChasseAuxTresorsApi.Interfaces
 {
-    public interface ICarteService
+    public interface IMapService
     {
-        Carte CreateCarte(IFormFile File);
+        Task<Map> CreateMapFromFile(IFormFile file);
     }
 }
