@@ -1,9 +1,8 @@
 namespace ChasseAuxTresorsApi.Tests.Services;
 
-
 public class MapServiceTest
 {
-    [Fact]
+    //[Fact]
     public void Test1()
     {
 
