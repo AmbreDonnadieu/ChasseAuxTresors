@@ -1,5 +1,6 @@
 ﻿using ChasseAuxTresorsApi.Classes;
 using ChasseAuxTresorsApi.Interfaces;
+using System.ComponentModel;
 
 namespace ChasseAuxTresorsApi.Services
 {
@@ -7,7 +8,7 @@ namespace ChasseAuxTresorsApi.Services
     {
         public MapService() { }
 
-        public Map CreateMapFromFile(List<string> lines)
+        public Map CreateMapFromListOfLines(List<string> lines)
         {
             var map = BuildEmptyMap(lines);
             foreach (var line in lines)
@@ -55,7 +56,7 @@ namespace ChasseAuxTresorsApi.Services
             if (int.TryParse(splitLine[1], out int horizontal) && int.TryParse(splitLine[2], out int vertical))
                 map.Boxes[horizontal, vertical].Type = BoxType.Moutain;
             else
-                Console.WriteLine($"WARNING : Counldn't place a moutain because something went wrong with line {line}.");
+                throw new WarningException($"WARNING : Counldn't place a moutain because something went wrong with line {line}.");
         }
 
         public void PopulateTreasure(Map map, string line)
@@ -71,7 +72,7 @@ namespace ChasseAuxTresorsApi.Services
                 map.Boxes[horizontal, vertical].TreasureCount = treasureCount;
             }
             else
-                Console.WriteLine($"WARNING : Counldn't place a treasure because something went wrong with line {line}.");
+                throw new WarningException($"WARNING : Counldn't place a treasure because something went wrong with line {line}.");
         }
     }
 }

@@ -24,7 +24,7 @@ namespace ChasseAuxTresorsApi.Controllers
         public async Task<FileResult> GetTreasureHuntResultFromFile(IFormFile file)
         {
             var alllines = await _fileService.ConvertFileToListStringAsync(file);
-            var map = _mapService.CreateMapFromFile(alllines);
+            var map = _mapService.CreateMapFromListOfLines(alllines);
             var adventurers = _adventurerService.PlaceThemOnMap(alllines, map);
 
             return File(new byte[] {}, "application/txt","result.txt");

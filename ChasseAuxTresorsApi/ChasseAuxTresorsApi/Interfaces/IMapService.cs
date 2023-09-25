@@ -4,6 +4,6 @@ namespace ChasseAuxTresorsApi.Interfaces
 {
     public interface IMapService
     {
-        Map CreateMapFromFile(List<string> lines);
+        Map CreateMapFromListOfLines(List<string> lines);
     }
 }

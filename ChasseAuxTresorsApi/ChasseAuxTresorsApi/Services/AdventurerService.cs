@@ -1,5 +1,6 @@
 ﻿using ChasseAuxTresorsApi.Classes;
 using ChasseAuxTresorsApi.Interfaces;
+using System.Reflection.Metadata.Ecma335;
 
 namespace ChasseAuxTresorsApi.Services
 {
@@ -112,10 +113,19 @@ namespace ChasseAuxTresorsApi.Services
                     break;
 
                 default:
-                    Console.WriteLine();
                     break;
             }
             adventurer.Position = temporaryPosition;
+            map.Boxes[temporaryPosition.x, temporaryPosition.y].Adventurer = adventurer;
+
+            if (map.Boxes[temporaryPosition.x, temporaryPosition.y].Type == BoxType.Treasure &&
+                map.Boxes[temporaryPosition.x, temporaryPosition.y].TreasureCount > 0)
+            {
+                map.Boxes[temporaryPosition.x, temporaryPosition.y].TreasureCount--;
+                adventurer.TreasureCount++;
+
+            }
+
         }
 
         public bool CanMoveFoward(Position newPositionAdventurer, Map map)
@@ -126,12 +136,13 @@ namespace ChasseAuxTresorsApi.Services
                 return false;
             }
 
-            if(map.Boxes[newPositionAdventurer.x, newPositionAdventurer.y].Type == BoxType.Moutain)
+            if (map.Boxes[newPositionAdventurer.x, newPositionAdventurer.y].Type == BoxType.Moutain)
             {
                 return false;
             }
             return true;
         }
+
 
         public List<Adventurer> PlaceThemOnMap(List<string> alllines, Map map)
         {

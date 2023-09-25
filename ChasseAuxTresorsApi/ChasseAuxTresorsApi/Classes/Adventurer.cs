@@ -8,6 +8,8 @@
         public Position Position { get; set; } = new Position(0,0);
         public Orientation Orientation { get; set; } = Orientation.North;
 
+        public int TreasureCount { get; set; } = 0;
+
         public Adventurer(string name, Position position, Orientation orientation, string mouvements)
         {
             Name = name;
@@ -15,6 +17,7 @@
             Orientation = orientation;
             Mouvements = mouvements;
             LastMouvementxIndex = 0;
+            TreasureCount = 0;
         }
     }
 
