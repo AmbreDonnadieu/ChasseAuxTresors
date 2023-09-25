@@ -14,6 +14,7 @@
             Position = position;
             Orientation = orientation;
             Mouvements = mouvements;
+            LastMouvementxIndex = 0;
         }
     }
 

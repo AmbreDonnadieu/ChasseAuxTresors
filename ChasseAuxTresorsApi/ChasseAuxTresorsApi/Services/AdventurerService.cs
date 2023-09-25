@@ -118,12 +118,18 @@ namespace ChasseAuxTresorsApi.Services
             adventurer.Position = temporaryPosition;
         }
 
-        public bool CanMoveFoward(Position positionAdventurer, Map map)
+        public bool CanMoveFoward(Position newPositionAdventurer, Map map)
         {
-            if (map.Boxes[positionAdventurer.x, positionAdventurer.y].Type == BoxType.Moutain &&
-                positionAdventurer.x > 0 && positionAdventurer.x < map.Width &&
-                positionAdventurer.y > 0 && positionAdventurer.y < map.Height)
+            if (newPositionAdventurer.x < 0 || newPositionAdventurer.x >= map.Width ||
+                newPositionAdventurer.y < 0 || newPositionAdventurer.y >= map.Height)
+            {
                 return false;
+            }
+
+            if(map.Boxes[newPositionAdventurer.x, newPositionAdventurer.y].Type == BoxType.Moutain)
+            {
+                return false;
+            }
             return true;
         }
 
@@ -140,13 +146,12 @@ namespace ChasseAuxTresorsApi.Services
                     TryParseStringToOrientation(splitLine[4], out Orientation orientation))
                     adventurers.Add(new Adventurer(splitLine[1], new Position(horizontal, vertical), orientation, splitLine[5]));
                 else
-                            Console.WriteLine($"WARNING : Counldn't place a moutain because something went wrong with line {line}.");
-
+                    Console.WriteLine($"WARNING : Counldn't place a moutain because something went wrong with line {line}.");
             }
             return adventurers;
         }
 
-        public bool TryParseStringToOrientation(string s, out Orientation orientation)
+        private bool TryParseStringToOrientation(string s, out Orientation orientation)
         {
             var res = false;
             switch (s)
@@ -175,7 +180,7 @@ namespace ChasseAuxTresorsApi.Services
                     res = true;
                     break;
 
-                default: 
+                default:
                     orientation = Orientation.North;
                     break;
             }

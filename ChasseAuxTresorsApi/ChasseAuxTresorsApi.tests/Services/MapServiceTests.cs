@@ -70,22 +70,16 @@ namespace ChasseAuxTresorsApi.tests.Services
         public void PopulateMountains_ThrowException_MapLineWithWrongFormat()
         {
             var map = new Map(10, 15);
-            var lines = new List<string>()
-            {
-                "M - 2 - 2 - 6",
-            };
-            Assert.Throws<Exception>(() => _mapService.PopulateMountains(map,lines));
+            var line = "M - 2 - 2 - 6";
+            Assert.Throws<Exception>(() => _mapService.PopulateMountain(map,line));
         }
 
         [Fact]
         public void PopulateMountains_ThrowException_BoxAlreadyDefined()
         {
             var map = new Map(10, 15);
-            var lines = new List<string>()
-            {
-                "M - 2 - 2 - 6",
-            };
-            Assert.Throws<Exception>(() => _mapService.PopulateMountains(map, lines));
+            var line = "M - 2 - 2 - 6";
+            Assert.Throws<Exception>(() => _mapService.PopulateMountain(map, line));
         }
     }
 }

@@ -20,15 +20,33 @@ namespace ChasseAuxTresorsApi.tests.Services
         public void CanMoveForward_True()
         {
             var map = new Map(10,13);
-            var positionMin = new Position(0, 0);
-            var res = _adventurerService.CanMoveFoward(positionMin, map);
+            var newPositionMin = new Position(0, 0);
+            var res = _adventurerService.CanMoveFoward(newPositionMin, map);
             Assert.True(res);
 
-            var positionMax = new Position(10, 13);
-            res = _adventurerService.CanMoveFoward(positionMax, map);
+            var newPositionMax = new Position(9, 12);
+            res = _adventurerService.CanMoveFoward(newPositionMax, map);
             Assert.True(res);
         }
 
+        [Fact]
+        public void CanMoveForward_False_OutOfRange()
+        {
+            var map = new Map(10, 13);
+            var newPosition = new Position(10, 13);
+            var res = _adventurerService.CanMoveFoward(newPosition, map);
+            Assert.False(res);
+        }
 
+        [Fact]
+        public void CanMoveForward_False_TryingToClimbAMountain()
+        {
+            var map = new Map(10, 13);
+            map.Boxes[5, 6].Type = BoxType.Moutain;
+
+            var newPosition = new Position(5, 6);
+            var res = _adventurerService.CanMoveFoward(newPosition, map);
+            Assert.False(res);
+        }
     }
 }
