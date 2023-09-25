@@ -136,7 +136,8 @@ namespace ChasseAuxTresorsApi.Services
                 return false;
             }
 
-            if (map.Boxes[newPositionAdventurer.x, newPositionAdventurer.y].Type == BoxType.Moutain)
+            if (map.Boxes[newPositionAdventurer.x, newPositionAdventurer.y].Type == BoxType.Moutain || 
+                map.Boxes[newPositionAdventurer.x, newPositionAdventurer.y].Adventurer != null)
             {
                 return false;
             }
