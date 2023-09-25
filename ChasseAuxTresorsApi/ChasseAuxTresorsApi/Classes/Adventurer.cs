@@ -4,6 +4,7 @@
     {
         public string Name { get; init; }
         public string Mouvements { get; init; }
+        public int LastMouvementxIndex { get; set; } = 0;
         public Position Position { get; set; } = new Position(0,0);
         public Orientation Orientation { get; set; } = Orientation.North;
 

@@ -7,27 +7,23 @@ namespace ChasseAuxTresorsApi.Services
     {
         public MapService() { }
 
-        public async Task<Map> CreateMapFromFile(IFormFile file)
+        public Map CreateMapFromFile(List<string> lines)
         {
-            var lines = await ConvertFileToListString(file);
             var map = BuildEmptyMap(lines);
-            PopulateMountains(map, lines);
-            PopulateTreasure(map, lines);
-            return map;
-        }
-
-
-        public async Task<List<string>> ConvertFileToListString(IFormFile file)
-        {
-            var allLines = new List<string>();
-            using (var reader = new StreamReader(file.OpenReadStream()))
+            foreach (var line in lines)
             {
-                while (reader.Peek() >= 0)
+                if (line.StartsWith("M"))
                 {
-                    allLines.Append(await reader.ReadLineAsync());
+                    PopulateMountain(map, line);
+                    continue;
+                }
+                if (line.StartsWith("T"))
+                {
+                    PopulateTreasure(map, line);
+                    continue;
                 }
             }
-            return allLines;
+            return map;
         }
 
         public Map BuildEmptyMap(List<string> lines)
@@ -40,43 +36,42 @@ namespace ChasseAuxTresorsApi.Services
             if (buildingMapLine.Count() > 1)
                 throw new Exception("There is more than one map in the file. Please, keep only one map for the process.");
 
-            var splitLine = buildingMapLine.First().Split(" - ").ToArray();
+            var splitLine = buildingMapLine.First().Trim().Split("-").ToArray();
             if (splitLine.Length != 3)
                 throw new Exception("We didn't get the right number of parameters. Please, correct the file and do the process one more time.");
 
-            var map = new Map(int.Parse(splitLine[1]), int.Parse(splitLine[2]));
-
-            return map;
+            if (int.TryParse(splitLine[1], out int horizontal) && int.TryParse(splitLine[2], out int vertical))
+                return new Map(horizontal, vertical);
+            else
+                throw new Exception("We couldn't create the map because we could read horizontal or vertical number.");
         }
 
-        public void PopulateMountains(Map map, List<string> lines)
+        public void PopulateMountain(Map map, string line)
         {
-            foreach (var line in lines.Where(l => l.StartsWith("M")))
-            {
-                var splitLine = line.Split(" - ").ToArray();
-                if (splitLine.Length != 3)
-                    throw new Exception("We didn't get the right number of parameters. Please, correct the file and do the process one more time.");
+            var splitLine = line.Trim().Split("-").ToArray();
+            if (splitLine.Length != 3)
+                throw new Exception("We didn't get the right number of parameters. Please, correct the file and do the process one more time.");
 
-                if (int.TryParse(splitLine[1], out int vertical) && int.TryParse(splitLine[2], out int horizontal))
-                    map.Boxes[vertical, horizontal] = new Box { type = BoxType.Moutain };
-                else
-                    Console.WriteLine($"WARNING : Counldn't place a moutain because something went wrong with line {line}.");
-            }
+            if (int.TryParse(splitLine[1], out int horizontal) && int.TryParse(splitLine[2], out int vertical))
+                map.Boxes[horizontal, vertical].Type = BoxType.Moutain;
+            else
+                Console.WriteLine($"WARNING : Counldn't place a moutain because something went wrong with line {line}.");
         }
 
-        public void PopulateTreasure(Map map, List<string> lines)
+        public void PopulateTreasure(Map map, string line)
         {
-            foreach (var line in lines.Where(l => l.StartsWith("T")))
-            {
-                var splitLine = line.Split(" - ").ToArray();
-                if (splitLine.Length != 4)
-                    throw new Exception("We didn't get the right number of parameters. Please, correct the file and do the process one more time.");
+            var splitLine = line.Trim().Split("-").ToArray();
+            if (splitLine.Length != 4)
+                throw new Exception("We didn't get the right number of parameters. Please, correct the file and do the process one more time.");
 
-                if (int.TryParse(splitLine[1], out int vertical) && int.TryParse(splitLine[2], out int horizontal) && int.TryParse(splitLine[3], out int treasureCount))
-                    map.Boxes[vertical, horizontal] = new Box { type = BoxType.Treasure, TreasureCount = treasureCount };
-                else
-                    Console.WriteLine($"WARNING : Counldn't place a treasure because something went wrong with line {line}.");
+            if (int.TryParse(splitLine[1], out int horizontal) && int.TryParse(splitLine[2], out int vertical) &&
+                int.TryParse(splitLine[3], out int treasureCount))
+            {
+                map.Boxes[horizontal, vertical].Type = BoxType.Treasure;
+                map.Boxes[horizontal, vertical].TreasureCount = treasureCount;
             }
+            else
+                Console.WriteLine($"WARNING : Counldn't place a treasure because something went wrong with line {line}.");
         }
     }
 }

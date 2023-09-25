@@ -8,18 +8,25 @@ namespace ChasseAuxTresorsApi.Controllers
     [ApiController]
     public class TreasureHuntController : ControllerBase
     {
-        private IMapService _mapService;
+        private readonly IMapService _mapService;
+        private readonly IAdventurerService _adventurerService;
+        private readonly IFileService _fileService;
 
-        public TreasureHuntController(IMapService mapService)
+        public TreasureHuntController(IMapService mapService, IAdventurerService adventurerService, IFileService fileService)
         {
             _mapService = mapService;
+            _adventurerService = adventurerService;
+            _fileService = fileService;
         }
 
         [HttpGet]
         [Route("")]
-        public FileResult GetTreasureHuntResultFromFile(IFormFile file)
+        public async Task<FileResult> GetTreasureHuntResultFromFile(IFormFile file)
         {
-            var carte = _mapService.CreateMapFromFile(file);
+            var alllines = await _fileService.ConvertFileToListStringAsync(file);
+            var map = _mapService.CreateMapFromFile(alllines);
+            var adventurers = _adventurerService.PlaceThemOnMap(alllines, map);
+
             return File(new byte[] {}, "application/txt","result.txt");
         }
     }
