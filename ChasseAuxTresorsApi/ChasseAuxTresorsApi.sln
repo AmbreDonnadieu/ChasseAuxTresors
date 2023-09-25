@@ -5,6 +5,8 @@ VisualStudioVersion = 17.6.33801.468
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChasseAuxTresorsApi", "ChasseAuxTresorsApi\ChasseAuxTresorsApi.csproj", "{5BBEBFE6-07FD-4493-B8F6-C5095F07DCD9}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChasseAuxTresorsApi.tests", "ChasseAuxTresorsApi.tests\ChasseAuxTresorsApi.tests.csproj", "{D3F483A3-E758-48D4-9D5B-19CFE7B28E93}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{5BBEBFE6-07FD-4493-B8F6-C5095F07DCD9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5BBEBFE6-07FD-4493-B8F6-C5095F07DCD9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5BBEBFE6-07FD-4493-B8F6-C5095F07DCD9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D3F483A3-E758-48D4-9D5B-19CFE7B28E93}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D3F483A3-E758-48D4-9D5B-19CFE7B28E93}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D3F483A3-E758-48D4-9D5B-19CFE7B28E93}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D3F483A3-E758-48D4-9D5B-19CFE7B28E93}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
