@@ -1,5 +1,6 @@
 ﻿using ChasseAuxTresorsApi.Classes;
 using ChasseAuxTresorsApi.Interfaces;
+using System.ComponentModel;
 using System.Reflection.Metadata.Ecma335;
 
 namespace ChasseAuxTresorsApi.Services
@@ -57,8 +58,7 @@ namespace ChasseAuxTresorsApi.Services
                     break;
 
                 default:
-                    Console.WriteLine();
-                    break;
+                    throw new WarningException($"TurnRight : This shouldn't happen");
             }
         }
         public void TurnLeft(Adventurer adventurer)
@@ -82,39 +82,41 @@ namespace ChasseAuxTresorsApi.Services
                     break;
 
                 default:
-                    Console.WriteLine();
-                    break;
+                    throw new WarningException($"TurnRight : This shouldn't happen");
+
             }
         }
 
         public void MoveForward(Adventurer adventurer, Map map)
         {
-            var temporaryPosition = adventurer.Position;
+            var temporaryPosition = new Position(adventurer.Position.x, adventurer.Position.y);
             switch (adventurer.Orientation)
             {
                 case Orientation.North:
-                    if (CanMoveFoward(new Position(temporaryPosition.x, temporaryPosition.y--), map))
+                    if (CanMoveFoward(new Position(temporaryPosition.x, temporaryPosition.y-1), map))
                         temporaryPosition.y--;
                     break;
 
                 case Orientation.South:
-                    if (CanMoveFoward(new Position(temporaryPosition.x, temporaryPosition.y++), map))
+                    if (CanMoveFoward(new Position(temporaryPosition.x, temporaryPosition.y+1), map))
                         temporaryPosition.y++;
                     break;
 
                 case Orientation.East:
-                    if (CanMoveFoward(new Position(temporaryPosition.x++, temporaryPosition.y), map))
+                    if (CanMoveFoward(new Position(temporaryPosition.x+1, temporaryPosition.y), map))
                         temporaryPosition.x++;
                     break;
 
                 case Orientation.West:
-                    if (CanMoveFoward(new Position(temporaryPosition.x--, temporaryPosition.y), map))
+                    if (CanMoveFoward(new Position(temporaryPosition.x-1, temporaryPosition.y), map))
                         temporaryPosition.x--;
                     break;
 
                 default:
                     break;
             }
+
+            map.Boxes[adventurer.Position.x, adventurer.Position.y].Adventurer = null;
             adventurer.Position = temporaryPosition;
             map.Boxes[temporaryPosition.x, temporaryPosition.y].Adventurer = adventurer;
 
@@ -123,7 +125,6 @@ namespace ChasseAuxTresorsApi.Services
             {
                 map.Boxes[temporaryPosition.x, temporaryPosition.y].TreasureCount--;
                 adventurer.TreasureCount++;
-
             }
 
         }
@@ -150,13 +151,13 @@ namespace ChasseAuxTresorsApi.Services
             List<Adventurer> adventurers = new List<Adventurer>();
             foreach (string line in alllines.Where(l => l.StartsWith('A')))
             {
-                var splitLine = line.Trim().Split("-").ToArray();
+                var splitLine = string.Concat(line.Where(c => !char.IsWhiteSpace(c))).Split("-").ToArray();
                 if (splitLine.Length != 6)
                     throw new Exception("We didn't get the right number of parameters. Please, correct the file and do the process one more time.");
 
-                if (int.TryParse(splitLine[2], out int horizontal) && int.TryParse(splitLine[3], out int vertical) &&
-                    TryParseStringToOrientation(splitLine[4], out Orientation orientation))
-                    adventurers.Add(new Adventurer(splitLine[1], new Position(horizontal, vertical), orientation, splitLine[5]));
+                if (int.TryParse(splitLine[2], out int abscissa) && int.TryParse(splitLine[3], out int ordinate) &&
+                    TryParseStringToOrientation(splitLine[4], out Orientation direction))
+                    adventurers.Add(new Adventurer(splitLine[1], new Position(abscissa, ordinate), direction, splitLine[5]));
                 else
                     Console.WriteLine($"WARNING : Counldn't place a moutain because something went wrong with line {line}.");
             }
@@ -166,7 +167,7 @@ namespace ChasseAuxTresorsApi.Services
         private bool TryParseStringToOrientation(string s, out Orientation orientation)
         {
             var res = false;
-            switch (s)
+            switch (s.Trim())
             {
                 case "S":
                 case "s":
