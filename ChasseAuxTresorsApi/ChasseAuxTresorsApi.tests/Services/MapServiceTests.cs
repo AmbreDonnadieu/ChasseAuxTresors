@@ -7,7 +7,6 @@ namespace ChasseAuxTresorsApi.tests.Services
     public class MapServiceTests
     {
         private readonly MapService _mapService;
-
         public MapServiceTests()
         {
             _mapService = new MapService();

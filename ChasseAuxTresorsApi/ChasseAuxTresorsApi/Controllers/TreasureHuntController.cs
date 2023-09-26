@@ -1,6 +1,7 @@
 ﻿using ChasseAuxTresorsApi.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Text;
 
 namespace ChasseAuxTresorsApi.Controllers
 {
@@ -19,7 +20,7 @@ namespace ChasseAuxTresorsApi.Controllers
             _fileService = fileService;
         }
 
-        [HttpGet]
+        [HttpPost]
         [Route("")]
         public async Task<FileResult> GetTreasureHuntResultFromFile(IFormFile file)
         {
@@ -27,7 +28,24 @@ namespace ChasseAuxTresorsApi.Controllers
             var map = _mapService.CreateMapFromListOfLines(alllines);
             var adventurers = _adventurerService.PlaceThemOnMap(alllines, map);
 
-            return File(new byte[] {}, "application/txt","result.txt");
+            var allMapTurns = $"Initialization : \n{_mapService.WriteMap(map)}\n\n";
+            if (!adventurers.Any())
+            {
+                allMapTurns = $"{allMapTurns} There were no adventurers on the map. It stays at initialization state.";
+                return File(Encoding.UTF8.GetBytes(allMapTurns), "application/txt", "result.txt");
+            }
+
+            var numberOfTurn = adventurers.Select(a => a.Mouvements.Length).Max();
+            for (var i = 0; i <= numberOfTurn; i++)
+            {
+                foreach (var adv in adventurers)
+                {
+                    _adventurerService.DoNextAction(adv, map);
+                }
+                allMapTurns = $"{allMapTurns} TURN {i} :\n{_mapService.WriteMap(map)}\n\n";
+            }
+
+            return File(Encoding.UTF8.GetBytes(allMapTurns), "application/txt", "result.txt");
         }
     }
 }

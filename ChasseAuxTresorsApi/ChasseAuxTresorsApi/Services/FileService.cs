@@ -11,9 +11,10 @@ namespace ChasseAuxTresorsApi.Services
             var allLines = new List<string>();
             using (var reader = new StreamReader(file.OpenReadStream()))
             {
-                while (reader.Peek() >= 0)
+                string? line;
+                while (!string.IsNullOrEmpty(line = await reader.ReadLineAsync()))
                 {
-                    allLines.Append(await reader.ReadLineAsync());
+                    allLines.Add(line);
                 }
             }
             return allLines;

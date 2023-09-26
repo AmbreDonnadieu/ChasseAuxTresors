@@ -74,5 +74,28 @@ namespace ChasseAuxTresorsApi.Services
             else
                 throw new WarningException($"WARNING : Counldn't place a treasure because something went wrong with line {line}.");
         }
+    
+        public string WriteMap(Map map)
+        {
+            string result="";
+            for(var i = 0; i<map.Width; i++)
+            {
+                for(var j = 0; j < map.Height; j++)
+                {
+                    if (map.Boxes[i, j].Type == BoxType.Moutain)
+                        result = result + "M ";
+                    else if (map.Boxes[i, j].Adventurer != null)
+                        result = result + $"A({map.Boxes[i, j].Adventurer?.Name} - {map.Boxes[i, j].Adventurer?.TreasureCount}) ";
+                    else if (map.Boxes[i, j].Type == BoxType.Treasure)
+                        result = result + $"T({map.Boxes[i, j].TreasureCount}) ";
+                    else
+                        result = result + ". ";
+                    result = result + " | ";
+                }
+                result = result + "\n";
+            }
+
+            return result;
+        }
     }
 }

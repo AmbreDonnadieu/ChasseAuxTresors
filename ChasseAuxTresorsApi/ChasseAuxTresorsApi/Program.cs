@@ -1,5 +1,8 @@
 
 
+using ChasseAuxTresorsApi.Interfaces;
+using ChasseAuxTresorsApi.Services;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -9,6 +12,11 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddApplicationInsightsTelemetry();
+
+builder.Services.AddScoped<IMapService, MapService>();
+builder.Services.AddScoped<IFileService, FileService>();
+builder.Services.AddScoped<IAdventurerService, AdventurerService>();
+
 
 var app = builder.Build();
 

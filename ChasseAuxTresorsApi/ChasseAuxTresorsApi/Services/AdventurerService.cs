@@ -157,7 +157,11 @@ namespace ChasseAuxTresorsApi.Services
 
                 if (int.TryParse(splitLine[2], out int abscissa) && int.TryParse(splitLine[3], out int ordinate) &&
                     TryParseStringToOrientation(splitLine[4], out Orientation direction))
-                    adventurers.Add(new Adventurer(splitLine[1], new Position(abscissa, ordinate), direction, splitLine[5]));
+                {
+                    var newAdventurer = new Adventurer(splitLine[1], new Position(abscissa, ordinate), direction, splitLine[5]);
+                    adventurers.Add(newAdventurer);
+                    map.Boxes[abscissa,ordinate].Adventurer = newAdventurer;
+                }
                 else
                     Console.WriteLine($"WARNING : Counldn't place a moutain because something went wrong with line {line}.");
             }
